@@ -68,18 +68,26 @@ def decryption(cipher, key):
 
 
 #Dictionary Attack decryption ---------------------------------------------------
+# takes every word in the dictionary and puts it into the list 'words'
 def dictionary():
     dictionary = open('/Users/kiansilva/Desktop/dictionary.txt', 'r')
     words = dictionary.readlines()
     dictionary.close()
     return words
 
+# takes every word in the list of the 1000 most common words and puts it into
+# the list 'commonWords'
 def CommonWords():
     common = open('/Users/kiansilva/Desktop/Most_common_words.txt', 'r')
     commonWords = common.readlines()
     common.close()
     return commonWords
-    
+
+# takes in an encrypted message and tests through every word in the commonwords
+# list to try and decrypt the message with each word in common words then checks
+# the decryption to see if the first five words in the decrypted message are words
+# in the dictionary. If the first five words are english words then that is the
+# decrypted message
 def dictionaryAttack(cipher):
     text = ''
     words = dictionary()
@@ -91,9 +99,11 @@ def dictionaryAttack(cipher):
         print(decrypt)
         if wordCheck(words, decrypt):
             return decryptedText
-            
 
-        
+
+# wordCheck takes in the dictionary list(which is called in the dictionaryAttack
+# function and the decrypted message and checks the decrypted message word by
+# word to make sure the decrypted message is decrypted and not still encrypted
 def wordCheck(words, text):
     i = 0
     while (i < 5):
