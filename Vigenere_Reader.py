@@ -110,7 +110,6 @@ def dictionaryAttack(cipher):
     commonWords = CommonWords()
         
     for i in commonWords:
-        print(i)
         decrypt = decryption(cipher, i)
         text = decrypt.split()
         if wordCheck(text, words):
@@ -125,21 +124,14 @@ wordCheck takes in the dictionary list(which is called in the dictionaryAttack)
 def wordCheck(text, words):
     i = 0
     final = False
-     
-    for word in words:
-        if word in text:
+    
+    while i < 5:
+        if text[i].strip() in words:
             final = True
+            break
         else:
-            final = False
-    print(final)
+            i += 1
     return final
-##    while i < 5:
-##        if text[i] in words:
-##            final = True
-##            break;
-##        else:
-##            i += 1
-##    return final
             
             
    
