@@ -39,13 +39,21 @@ def encryption(message, key):
     file = message.lower()
     index = 0
     key = key.lower()
+    keys = ''
+    a = 0
+    while a < len(key):
+        if key[a].isalpha():
+            keys += key[a]
+            a += 1
+        else:
+            a += 1
     for c in file:
         if c.isalpha():
-            offset = ord(key[index]) - ord('a')
+            offset = ord(keys[index]) - ord('a')
             encrypted = chr((ord(c) - ord('a')+offset) % 26 + ord('a'))
             cipher += encrypted
 
-            index = (index + 1) % len(key)
+            index = (index + 1) % len(keys)
         else:
             cipher += c
     return cipher
@@ -54,14 +62,22 @@ def decryption(cipher, key):
     plaintext = ''
     index = 0
     key = key.lower()
+    keys = ''
+    a = 0
+    while a < len(key):
+        if key[a].isalpha():
+            keys += key[a]
+            a += 1
+        else:
+            a += 1
     for i in cipher:
         if i.isalpha():
-            offset = ord(key[index]) - ord('a')
+            offset = ord(keys[index]) - ord('a')
             decrypt = (ord(i) - ord('a') - offset) % 26
-            decrypted = chr( decrypt + ord('a'))
+            decrypted = chr(decrypt + ord('a'))
 
             plaintext += decrypted
-            index = (index + 1) % len(key)
+            index = (index + 1) % len(keys)
         else:
            plaintext += i 
     return plaintext    
@@ -70,7 +86,7 @@ def decryption(cipher, key):
 #Dictionary Attack decryption ---------------------------------------------------
 # takes every word in the dictionary and puts it into the list 'words'
 def dictionary():
-    dictionary = open('/Users/kiansilva/Desktop/dictionary.txt', 'r')
+    dictionary = open('Dictionary.txt', 'r')
     words = dictionary.readlines()
     dictionary.close()
     return words
@@ -78,7 +94,7 @@ def dictionary():
 # takes every word in the list of the 1000 most common words and puts it into
 # the list 'commonWords'
 def CommonWords():
-    common = open('/Users/kiansilva/Desktop/Most_common_words.txt', 'r')
+    common = open('CommonWords.txt', 'r')
     commonWords = common.readlines()
     common.close()
     return commonWords
@@ -92,31 +108,38 @@ def dictionaryAttack(cipher):
     text = ''
     words = dictionary()
     commonWords = CommonWords()
-    
+        
     for i in commonWords:
         print(i)
         decrypt = decryption(cipher, i)
-        print(decrypt)
-        if wordCheck(words, decrypt):
-            return decryptedText
+        text = decrypt.split()
+        if wordCheck(text, words):
+            return decrypt
+        
 
-
-# wordCheck takes in the dictionary list(which is called in the dictionaryAttack
-# function and the decrypted message and checks the decrypted message word by
+"""
+wordCheck takes in the dictionary list(which is called in the dictionaryAttack)
+#function and the decrypted message and checks the decrypted message word by
 # word to make sure the decrypted message is decrypted and not still encrypted
-def wordCheck(words, text):
+"""
+def wordCheck(text, words):
     i = 0
-    while (i < 5):
-        if text[i] in words:
-            print(text[i])
-            i += 1
+    final = False
+     
+    for word in words:
+        if word in text:
+            final = True
         else:
-            return False
-        if i == len(text):
-            return True
-        
-        
-    
+            final = False
+    print(final)
+    return final
+##    while i < 5:
+##        if text[i] in words:
+##            final = True
+##            break;
+##        else:
+##            i += 1
+##    return final
             
             
    
