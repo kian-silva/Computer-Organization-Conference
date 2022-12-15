@@ -8,8 +8,9 @@ def Vigenere_Reader(file, key):
     message = ''.join(file)
     statement = filterChar(message)
     encrypt = encryption(statement, key)
-    print('The Encryption of: ' + message)
-    print('is ;' + encrypt)
+    print('The Encryption of: ', message)
+    print('Using', key, 'is:')
+    print(encrypt)
     print()
     print()
     decryption_key = decryption(encrypt, key)
@@ -87,15 +88,18 @@ def decryption(cipher, key):
 # takes every word in the dictionary and puts it into the list 'words'
 def dictionary():
     dictionary = open('Dictionary.txt', 'r')
-    words = dictionary.readlines()
+    words = dictionary.read().split('\n')
+    word_lower = []
+    for word in words:
+        word_lower.append(word.lower())
     dictionary.close()
-    return words
+    return word_lower
 
 # takes every word in the list of the 1000 most common words and puts it into
 # the list 'commonWords'
 def CommonWords():
     common = open('CommonWords.txt', 'r')
-    commonWords = common.readlines()
+    commonWords = common.read().split('\n')
     common.close()
     return commonWords
 
@@ -108,30 +112,29 @@ def dictionaryAttack(cipher):
     text = ''
     words = dictionary()
     commonWords = CommonWords()
-        
     for i in commonWords:
         decrypt = decryption(cipher, i)
-        text = decrypt.split()
-        if wordCheck(text, words):
+        text = decrypt.split('\n')
+        a = [''.join(text for text in s if text not in string.punctuation)
+             for s in text]
+        search = a[0].split()
+        if wordCheck(search, words):
             return decrypt
         
 
-"""
-wordCheck takes in the dictionary list(which is called in the dictionaryAttack)
-#function and the decrypted message and checks the decrypted message word by
+
+# wordCheck takes in the dictionary list(which is called in the dictionaryAttack)
+# function and the decrypted message and checks the decrypted message word by
 # word to make sure the decrypted message is decrypted and not still encrypted
-"""
+
 def wordCheck(text, words):
     i = 0
-    final = False
-    
     while i < 5:
-        if text[i].strip() in words:
-            final = True
-            break
-        else:
+        if text[i] in words:
+            if i == 4:
+                return True
             i += 1
-    return final
-            
-            
+        else:
+            return False
+    
    
